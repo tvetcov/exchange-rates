@@ -1,0 +1,32 @@
+{
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "plugins": [
+    "@typescript-eslint"
+  ],
+  "extends": [
+    "eslint:recommended",
+    "eslint-config-airbnb-typescript",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:react/recommended",
+    "eslint-config-airbnb/hooks"
+  ],
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": 12,
+    "sourceType": "module",
+    "project": [
+      "./tsconfig.json"
+    ]
+  },
+  "rules": {
+    "react/react-in-jsx-scope": "off",
+    "indent": "off",
+    "react/jsx-indent": "off",
+    "react/jsx-props-no-spreading": "off",
+    "@typescript-eslint/explicit-module-boundary-types": "off"
+  }
+}
