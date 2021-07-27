@@ -1,50 +1,27 @@
 import React, { useEffect, useState } from 'react';
 import { Grid } from '@material-ui/core';
 import Paper from '../../../components/Paper';
-import { latestRatesMock, historyRateMock } from '../../../tests/mock';
 import Header from '../../../components/Header';
 import LineChart from './LineChart';
 import requestDataFromApi from '../../../utils/api';
 import Constants from '../../../utils/constants';
 import CurrencyCards from './CurrenyCards';
-import { getWeekAgoDatesFromNow } from '../../../utils/data';
-import Loader from '../../../components/Loader';
 
 function SelectionChart(): JSX.Element {
-  const [data, setData] = useState(latestRatesMock);
-  const [chartData, setChartData] = useState(historyRateMock);
+  const [data, setData] = useState(Object.create({}));
   const [selectedCurrency, setSelectedCurrency] = useState<string | number>('');
-  const [isLoading, setIsLoading] = useState(true);
-  const datesArr = getWeekAgoDatesFromNow();
 
   useEffect(() => {
     requestDataFromApi(`latest?access_key=${Constants.apiKey}`)
       .then((r) => {
         setData(r.data);
-        setIsLoading(false);
       });
   }, []);
 
-  const cardClickHandler = async (currency: string) => {
-    if (currency === selectedCurrency) {
-      return;
-    }
-    const chartDataCopy = chartData;
-    setIsLoading(true);
-
-    await Promise.all(datesArr.map((date: string) => {
-      const url = `${date}?access_key=${Constants.apiKey}&symbols=${currency}`;
-      return requestDataFromApi(url)
-        .then((r) => {
-          const currencyValue = r.data.rates[currency];
-          Object.defineProperty(chartDataCopy, date, { value: currencyValue });
-        });
-    }));
-
-    setIsLoading(false);
+  const cardClickHandler = React.useCallback((currency: string) => {
+    if (selectedCurrency === currency) return;
     setSelectedCurrency(currency);
-    setChartData(chartDataCopy);
-  };
+  }, []);
 
   return (
         <Grid container spacing={3}>
@@ -53,16 +30,16 @@ function SelectionChart(): JSX.Element {
                     {`To 1 ${data.base} for ${data.date}`}
                 </Header>
             </Grid>
-            <CurrencyCards latestRates={data.rates} clickHandler={cardClickHandler} />
+            {data.rates
+            && <CurrencyCards latestRates={data.rates} clickHandler={cardClickHandler} />}
             {selectedCurrency
             && (
                 <Grid item xs={12} data-testid="chart">
                     <Paper>
-                        <LineChart data={chartData} />
+                        <LineChart selectedCurrency={selectedCurrency} />
                     </Paper>
                 </Grid>
             )}
-            <Loader isLoading={isLoading} />
         </Grid>
   );
 }

@@ -1,5 +1,5 @@
 const Constants = {
-  apiKey: '20276df9ddbb9d7570b939e5aed9eadd',
+  apiKey: '69c7e9592085aafc4e9c2cc47812504c',
   baseApiUrl: 'http://api.exchangeratesapi.io/v1/',
 };
 

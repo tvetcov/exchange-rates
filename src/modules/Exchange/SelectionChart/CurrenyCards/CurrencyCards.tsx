@@ -6,7 +6,7 @@ type PropTypes = {
   latestRates: {
     [key: string]: number | string,
   };
-  clickHandler: (currency: string) => Promise<void>;
+  clickHandler: (currency: string) => void;
 };
 
 type TotalResponse = {
